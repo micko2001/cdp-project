@@ -20,7 +20,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>
-    Argon Dashboard - Free Dashboard for Bootstrap 4 by Creative Tim
+   CDP TEUB
   </title>
   <!-- Favicon -->
   <link href="./assets/img/brand/logo-teub.png" rel="icon" type="image/png">
@@ -631,6 +631,31 @@
         token: "ee6fab19c5a04ac1a32a645abde4613a",
         application: "argon-dashboard-free"
       });
+
+  // Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyBEoEwPC3xzPaL1KIbqkcN_wNY7PmqG6XQ",
+  authDomain: "cdp-project-400613.firebaseapp.com",
+  databaseURL: "https://cdp-project-400613-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "cdp-project-400613",
+  storageBucket: "cdp-project-400613.appspot.com",
+  messagingSenderId: "909449428737",
+  appId: "1:909449428737:web:060056d781bb5b806be500",
+  measurementId: "G-GE8K7GGXRR"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+
+
   </script>
 </body>
 
