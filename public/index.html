@@ -268,9 +268,14 @@
                     </div>
                     <div class="col-auto">
                       <label class="switch">
-                        <input type="checkbox" >
+                        <input type="checkbox" id="In-mySwitch" >
                         <span class="slider round"></span>
                       </label>
+                      </div>
+                      <div class="col-auto">
+                        <div class="icon icon-shape bg-yellow text-white rounded-circle shadow">
+                          <i class="fas fa-thermometer-quarter"></i>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -281,11 +286,11 @@
                 <div class="card-body">
                   <div class="row">
                     <div class="col">
-                      <h5 class="card-title text-uppercase text-muted mb-0">eligible Switch</h5>
+                      <h5 class="card-title text-uppercase text-muted mb-0" >eligible Switch</h5>
                     </div>
                     <div class="col-auto">
                       <label class="switch">
-                        <input type="checkbox" >
+                        <input type="checkbox" id="El-mySwitch" >
                         <span class="slider round"></span>
                       </label>
                       </div>
@@ -650,6 +655,59 @@
         // Panggil fetchData saat halaman dimuat
         fetchData();
 
+        const switchElementEl = document.getElementById("El-mySwitch");
+        const switchElementIn = document.getElementById("In-mySwitch");
+
+    switchElementEl.addEventListener("change", function() {
+    const isChecked = this.checked;
+    const value = isChecked ? true : false;
+
+    // Buat permintaan PUT ke API untuk mengubah data di database
+    fetch("https://rest-cdp-sunob45tza-et.a.run.app/api/data/d82K9kQOP13eUbNaPRxt", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ eliSwt : value }),
+    })
+      .then(response => {
+        if (response.ok) {
+          console.log(`Checkbox sekarang ${isChecked ? "dicentang" : "tidak dicentang"}. Diperbarui dalam database.`);
+        } else {
+          console.error("Gagal memperbarui database.");
+          // Jika gagal, kembalikan kondisi checkbox ke kondisi sebelumnya
+          
+        }
+      })
+      .catch(error => {
+        console.error("Terjadi kesalahan:", error);
+      });
+  });
+  switchElementIn.addEventListener("change", function() {
+    const isChecked = this.checked;
+    const value = isChecked ? true : false;
+
+    // Buat permintaan PUT ke API untuk mengubah data di database
+    fetch("https://rest-cdp-sunob45tza-et.a.run.app/api/data/d82K9kQOP13eUbNaPRxt", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ inSwt : value }),
+    })
+      .then(response => {
+        if (response.ok) {
+          console.log(`Checkbox sekarang ${isChecked ? "dicentang" : "tidak dicentang"}. Diperbarui dalam database.`);
+        } else {
+          console.error("Gagal memperbarui database.");
+          // Jika gagal, kembalikan kondisi checkbox ke kondisi sebelumnya
+          
+        }
+      })
+      .catch(error => {
+        console.error("Terjadi kesalahan:", error);
+      });
+  });
 
   </script>
 </body>
