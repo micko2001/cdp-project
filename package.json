@@ -1,17 +1,15 @@
 {
-  "name": "cdp-project",
+  "name": "cdp-project-1",
   "version": "1.0.0",
-  "description": "it's for capstone design project in eletrical engineering of UB",
+  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js"
   },
-  "author": "Micko",
+  "author": "",
   "license": "ISC",
   "dependencies": {
-    "dockerfile": "^0.1.1",
-    "express": "^4.18.2",
-    "fs": "^0.0.1-security"
+    "express": "^4.18.2"
   }
 }
