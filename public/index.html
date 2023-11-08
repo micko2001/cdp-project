@@ -228,7 +228,7 @@
                   <div class="row">
                     <div class="col">
                       <h5 class="card-title text-uppercase text-muted mb-0">Boiling Temperature</h5>
-                      <span class="h2 font-weight-bold mb-0 temp">67</span>
+                      <span class="h2 font-weight-bold mb-0 temp" id ="b-temp"></span>
                     </div>
                     <div class="col-auto">
                       <div class="icon icon-shape bg-warning text-white rounded-circle shadow">
@@ -313,7 +313,7 @@
         </div>
       </div>
     </div>
-    <div class="container-fluid mt--7">
+   <!--<div class="container-fluid mt--7">
       <div class="row kode">
         <div class="col-xl-8 mb-5 mb-xl-0">
           <div class="card bg-gradient-default shadow">
@@ -341,15 +341,15 @@
                 </div>
               </div>
             </div>
-            <div class="card-body">
-              <!-- Chart -->
+            <div class="card-body">-->
+              <!-- Chart 
               <div class="chart">
-                <!-- Chart wrapper -->
+            Chart wrapper 
                 <canvas id="chart-sales" class="chart-canvas"></canvas>
               </div>
             </div>
           </div>
-        </div>
+        </div>-->
     <!--   <div class="col-xl-4">
           <div class="card shadow">
             <div class="card-header bg-transparent">
@@ -368,7 +368,7 @@
             </div>
           </div>
         </div>-->
-      </div>
+     <!--  </div>
       <div class="row mt-5 kode">
         <div class="col-xl-8 mb-5 mb-xl-0">
           <div class="card shadow">
@@ -382,9 +382,9 @@
                 </div>
               </div>
             </div>
-            <div class="table-responsive">
+            <div class="table-responsive">-->
               <!-- Projects table -->
-              <table class="table align-items-center table-flush">
+         <!--      <table class="table align-items-center table-flush">
                 <thead class="thead-light">
                   <tr>
                     <th scope="col">Page name</th>
@@ -468,7 +468,7 @@
               </table>
             </div>
           </div>
-        </div>
+        </div>-->
       <!--  <div class="col-xl-4">
           <div class="card shadow">
             <div class="card-header border-0">
@@ -632,28 +632,30 @@
         application: "argon-dashboard-free"
       });
 
-  // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+      function fetchData() {
+            // Ganti URL dengan URL RESTful API yang sesuai
+            fetch("https://rest-cdp-sunob45tza-et.a.run.app/api/data")
+                .then(response => response.json())
+                .then(data => {
+                    const boilTempElement = document.getElementById('b-temp');
+                    if (data.length > 0) {
+                        const latestData = data[data.length - 1];
+                        const boilTemp = latestData['boil-temp'];
+                        boilTempElement.textContent = boilTemp;
+                    } else {
+                        boilTempElement.textContent = '-';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                });
+        }
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyBEoEwPC3xzPaL1KIbqkcN_wNY7PmqG6XQ",
-  authDomain: "cdp-project-400613.firebaseapp.com",
-  databaseURL: "https://cdp-project-400613-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "cdp-project-400613",
-  storageBucket: "cdp-project-400613.appspot.com",
-  messagingSenderId: "909449428737",
-  appId: "1:909449428737:web:060056d781bb5b806be500",
-  measurementId: "G-GE8K7GGXRR"
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+        // Panggil fetchData setiap beberapa detik (misalnya, setiap 5 detik)
+        setInterval(fetchData, 5000);
+        
+        // Panggil fetchData saat halaman dimuat
+        fetchData();
 
 
   </script>
