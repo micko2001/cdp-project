@@ -210,7 +210,8 @@
                   <div class="row">
                     <div class="col">
                       <h5 class="card-title text-uppercase text-muted mb-0">Ethanol Rate</h5>
-                      <span class="h2 font-weight-bold mb-0">60.7 %</span>
+                      <span class="h2 font-weight-bold mb-0" id ="e-cons">cek</span>
+                      <span class="h2 font-weight-bold mb-0">%</span>
                     </div>
                     <div class="col-auto">
                       <div class="icon icon-shape bg-danger text-white rounded-circle shadow">
@@ -228,7 +229,7 @@
                   <div class="row">
                     <div class="col">
                       <h5 class="card-title text-uppercase text-muted mb-0">Boiling Temperature</h5>
-                      <span class="h2 font-weight-bold mb-0 temp" id ="b-temp"></span>
+                      <span class="h2 font-weight-bold mb-0 temp" id ="b-temp">-</span>
                     </div>
                     <div class="col-auto">
                       <div class="icon icon-shape bg-warning text-white rounded-circle shadow">
@@ -246,7 +247,7 @@
                   <div class="row">
                     <div class="col">
                       <h5 class="card-title text-uppercase text-muted mb-0">Ethanol Temperature</h5>
-                      <span class="h2 font-weight-bold mb-0 temp">34</span>
+                      <span class="h2 font-weight-bold mb-0 temp" id ="e-temp">-</span>
                     </div>
                     <div class="col-auto">
                       <div class="icon icon-shape bg-yellow text-white rounded-circle shadow">
@@ -257,23 +258,7 @@
                 </div>
               </div>
             </div>
-            <div class="col-xl-3 col-lg-6">
-              <div class="card card-stats mb-4 mb-xl-0">
-                <div class="card-body">
-                  <div class="row">
-                    <div class="col">
-                      <h5 class="card-title text-uppercase text-muted mb-0">Ethanol Humidity</h5>
-                      <span class="h2 font-weight-bold mb-0">49,65%</span>
-                    </div>
-                    <div class="col-auto">
-                      <div class="icon icon-shape bg-info text-white rounded-circle shadow">
-                        <i class="fas fa-cloud"></i>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            
             <div class="col-xl-3 col-lg-6">
               <div class="card card-stats mb-4 mb-xl-0">
                 <div class="card-body">
@@ -638,12 +623,20 @@
                 .then(response => response.json())
                 .then(data => {
                     const boilTempElement = document.getElementById('b-temp');
+                    const ethconsElement = document.getElementById('e-cons');
+                    const ethTempElement = document.getElementById('e-temp');
                     if (data.length > 0) {
                         const latestData = data[data.length - 1];
                         const boilTemp = latestData['boil-temp'];
+                        const ethcons = latestData['eth-sen'];
+                        const ethTemp = latestData['sen-temp'];
                         boilTempElement.textContent = boilTemp;
+                        ethconsElement.textContent = ethcons;
+                        ethTempElement.textContent=ethTemp;
                     } else {
                         boilTempElement.textContent = '-';
+                        ethconsElement.textContent = '-';
+                        ethTempElement.textContent = '-';
                     }
                 })
                 .catch(error => {
