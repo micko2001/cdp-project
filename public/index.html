@@ -273,8 +273,8 @@
                       </label>
                       </div>
                       <div class="col-auto">
-                        <div class="icon icon-shape bg-yellow text-white rounded-circle shadow">
-                          <i class="fas fa-thermometer-quarter"></i>
+                        <div class="icon icon-shape text-white rounded-circle bg-gray bg-yellow shadow" id="in-lamp">
+                          <i class="fas fa-lightbulb"></i>
                         </div>
                       </div>
                     </div>
@@ -293,6 +293,11 @@
                         <input type="checkbox" id="El-mySwitch" >
                         <span class="slider round"></span>
                       </label>
+                      </div>
+                      <div class="col-auto">
+                        <div class="icon icon-shape text-white rounded-circle bg-gray bg-yellow shadow" id="el-lamp">
+                          <i class="fas fa-lightbulb"></i>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -621,7 +626,15 @@
         token: "ee6fab19c5a04ac1a32a645abde4613a",
         application: "argon-dashboard-free"
       });
-
+      const bulbFeature = (elements, targets) => {
+        if(targets){
+            elements.classList.add('bg-yellow');
+            elements.classList.remove('bg-gray');
+        }else {
+            elements.classList.add('bg-gray');
+            elements.classList.remove('bg-yellow');
+        }
+      }
       function fetchData() {
             // Ganti URL dengan URL RESTful API yang sesuai
             fetch("https://rest-cdp-sunob45tza-et.a.run.app/api/data")
@@ -630,14 +643,20 @@
                     const boilTempElement = document.getElementById('b-temp');
                     const ethconsElement = document.getElementById('e-cons');
                     const ethTempElement = document.getElementById('e-temp');
+                    const inLampElement = document.getElementById('in-lamp');
+                    const elLampElement = document.getElementById('el-lamp');
                     if (data.length > 0) {
                         const latestData = data[data.length - 1];
                         const boilTemp = latestData['boil-temp'];
                         const ethcons = latestData['eth-sen'];
                         const ethTemp = latestData['sen-temp'];
+                        const inLamp = latestData['inSwt'];
+                        const elLamp = latestData['eliSwt'];
                         boilTempElement.textContent = boilTemp;
                         ethconsElement.textContent = ethcons;
-                        ethTempElement.textContent=ethTemp;
+                        ethTempElement.textContent = ethTemp;
+                      bulbFeature(inLampElement, inLamp);
+                      bulbFeature(elLampElement, elLamp);
                     } else {
                         boilTempElement.textContent = '-';
                         ethconsElement.textContent = '-';
@@ -650,7 +669,7 @@
         }
 
         // Panggil fetchData setiap beberapa detik (misalnya, setiap 5 detik)
-        setInterval(fetchData, 5000);
+        setInterval(fetchData, 1500);
         
         // Panggil fetchData saat halaman dimuat
         fetchData();
