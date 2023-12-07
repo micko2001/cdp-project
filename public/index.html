@@ -308,44 +308,60 @@
         </div>
       </div>
     </div>
-   <!--<div class="container-fluid mt--7">
-      <div class="row kode">
-        <div class="col-xl-8 mb-5 mb-xl-0">
+
+<!--!chart mulai-->
+   <div class="container-fluid mt--7">
+      <div class="row kode ">
+        <div class="col-xl-8 mb-2 mb-xl-0  ">
+          <h2 class="card-title text-uppercase h2 font-weight-bold mb-0 timer"> DATA RECORDER </h2>
+          <div class="col-xl-3 col-lg-6">
+            <div class="card card-stats mb-2 mb-xl-0 bg-gradient-default shadow">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col">
+                    <h2 id="timer" class="mb-0 text-white">00:00:00</h2>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <br></br>
+          <button id="startBtn" class="pd-10 mb-xl-0 button mb-3">Mulai</button>
+          <button id="stopBtn"  class="pd-10 mb-xl-0 button bg-red mb-3">Berhenti</button>
+          <button id="resetBtn"  class="pd-10 mb-xl-0 button bg-blue mb-3">Reset</button>
+          <br></br>
+
           <div class="card bg-gradient-default shadow">
             <div class="card-header bg-transparent">
               <div class="row align-items-center">
                 <div class="col">
                   <h6 class="text-uppercase text-light ls-1 mb-1">Overview</h6>
-                  <h2 class="text-white mb-0">Sales value</h2>
+                  <h2 class="text-white mb-0">Record Value</h2>
                 </div>
                 <div class="col">
                   <ul class="nav nav-pills justify-content-end">
-                    <li class="nav-item mr-2 mr-md-0" data-toggle="chart" data-target="#chart-sales" data-update='{"data":{"datasets":[{"data":[0, 20, 10, 30, 15, 40, 20, 60, 60]}]}}' data-prefix="$" data-suffix="k">
-                      <a href="#" class="nav-link py-2 px-3 active" data-toggle="tab">
-                        <span class="d-none d-md-block">Month</span>
-                        <span class="d-md-none">M</span>
-                      </a>
-                    </li>
-                    <li class="nav-item" data-toggle="chart" data-target="#chart-sales" data-update='{"data":{"datasets":[{"data":[0, 20, 5, 25, 10, 30, 15, 40, 40]}]}}' data-prefix="$" data-suffix="k">
-                      <a href="#" class="nav-link py-2 px-3" data-toggle="tab">
-                        <span class="d-none d-md-block">Week</span>
-                        <span class="d-md-none">W</span>
+                    <li class="nav-item mr-2 mr-md-0 diagram" data-toggle="chart" data-target="#chart-sales" data-update='{"data":{"labels":[],"datasets":[{"data":[]}]}}' data-prefix= " " data-suffix="%" > <!--'{"data":{"labels":[2,5,6]}} -->
+                      <a href="#" class="nav-link py-2 px-3 active" data-toggle="tab" id="diagramClick">
+                        <span class="d-none d-md-block">Ethanol</span>
+                        <span class="d-md-none">Eth</span>
                       </a>
                     </li>
                   </ul>
                 </div>
               </div>
             </div>
-            <div class="card-body">-->
-              <!-- Chart 
+            <div class="card-body">
+              <!-- Chart -->
               <div class="chart">
-            Chart wrapper 
+          <!--     Chart wrapper -->
                 <canvas id="chart-sales" class="chart-canvas"></canvas>
               </div>
             </div>
           </div>
-        </div>-->
-    <!--   <div class="col-xl-4">
+
+          
+        </div>
+       <!--  <div class="col-xl-4">
           <div class="card shadow">
             <div class="card-header bg-transparent">
               <div class="row align-items-center">
@@ -356,8 +372,8 @@
               </div>
             </div>
             <div class="card-body">
-              Chart -->
-              <!-- <div class="chart">
+              Chart --> 
+               <!--  <div class="chart">
                 <canvas id="chart-orders" class="chart-canvas"></canvas>
               </div>
             </div>
@@ -585,7 +601,7 @@
       </div>
       <!-- Footer -->
       <footer class="footer">
-        <div class="row align-items-center justify-content-xl-between">
+        <!--<div class="row align-items-center justify-content-xl-between">
           <div class="col-xl-6">
             <div class="copyright text-center text-xl-left text-muted">
               &copy; 2018 <a rel="noopener" href="https://www.creative-tim.com" class="font-weight-bold ml-1" target="_blank">Creative Tim</a>
@@ -607,7 +623,7 @@
               </li>
             </ul>
           </div>
-        </div>
+        </div>-->
       </footer>
     </div>
   </div>
@@ -626,6 +642,26 @@
         token: "ee6fab19c5a04ac1a32a645abde4613a",
         application: "argon-dashboard-free"
       });
+
+      let startTime, timerInterval,pausedTime
+      let recordedTimes = [];
+      let recordedNumber =[];
+      let xchart = [];
+      let ychart =[];
+// Fungsi untuk mengubah format waktu ke HH:MM:SS
+function formatTime(timeInSeconds) {
+  let hours = Math.floor(timeInSeconds / 3600);
+  let minutes = Math.floor((timeInSeconds % 3600) / 60);
+  let seconds = timeInSeconds % 60;
+
+  return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+}
+
+  function updateTimer() {
+  const currentTime = Math.floor((Date.now() - startTime) / 1000);
+  document.getElementById('timer').innerHTML = formatTime(currentTime);
+}
+
       const bulbFeature = (elements, targets) => {
         if(targets){
             elements.classList.add('bg-yellow');
@@ -635,7 +671,31 @@
             elements.classList.remove('bg-yellow');
         }
       }
-      function fetchData() {
+      const fetch_post = (data) => {
+        // Buat permintaan PUT ke API untuk mengubah data di database
+        fetch("https://rest-cdp-sunob45tza-et.a.run.app/api/data/d82K9kQOP13eUbNaPRxt", {
+        method: "POST",
+        headers: {
+        "Content-Type": "application/json",
+       },
+        body: JSON.stringify(data),
+         })
+        .then(response => {
+        if (response.ok) {
+          console.log("Database berhasil diperbarui");
+        } else {
+          console.error("Gagal memperbarui database.");
+          // Jika gagal, kembalikan kondisi checkbox ke kondisi sebelumnya
+          
+        }
+            })
+          .catch(error => {
+           console.error("Terjadi kesalahan:", error);
+        });
+      }
+
+
+      function fetchGetData() {
             // Ganti URL dengan URL RESTful API yang sesuai
             fetch("https://rest-cdp-sunob45tza-et.a.run.app/api/data")
                 .then(response => response.json())
@@ -645,6 +705,7 @@
                     const ethTempElement = document.getElementById('e-temp');
                     const inLampElement = document.getElementById('in-lamp');
                     const elLampElement = document.getElementById('el-lamp');
+                    const diagramElement = document.querySelector('.diagram');
                     if (data.length > 0) {
                         const latestData = data[data.length - 1];
                         const boilTemp = latestData['boil-temp'];
@@ -652,11 +713,28 @@
                         const ethTemp = latestData['sen-temp'];
                         const inLamp = latestData['inSwt'];
                         const elLamp = latestData['eliSwt'];
+                        let timer = latestData['times'];
+                        let valueY = latestData['value'];
                         boilTempElement.textContent = boilTemp;
                         ethconsElement.textContent = ethcons;
                         ethTempElement.textContent = ethTemp;
-                      bulbFeature(inLampElement, inLamp);
-                      bulbFeature(elLampElement, elLamp);
+                        xchart = timer;
+                        ychart = valueY;
+                        
+                        
+                        
+                        bulbFeature(inLampElement, inLamp);
+                        bulbFeature(elLampElement, elLamp);
+                        if(startTime>0 && pausedTime==null)
+                        {
+                          const currentTime = Math.floor((Date.now() - startTime) / 1000);
+                          recordedTimes.push(formatTime(currentTime));
+                          recordedNumber.push(ethcons);
+                          console.log(recordedTimes);
+                          console.log(recordedNumber);
+                        }else if(pausedTime>0){
+                          console.log(recordedNumber.length);
+                        }
                     } else {
                         boilTempElement.textContent = '-';
                         ethconsElement.textContent = '-';
@@ -669,63 +747,91 @@
         }
 
         // Panggil fetchData setiap beberapa detik (misalnya, setiap 5 detik)
-        setInterval(fetchData, 1500);
+    setInterval(fetchGetData, 1500);
         
         // Panggil fetchData saat halaman dimuat
-        fetchData();
+    fetchGetData();
 
-        const switchElementEl = document.getElementById("El-mySwitch");
-        const switchElementIn = document.getElementById("In-mySwitch");
+    const switchElementEl = document.getElementById("El-mySwitch");
+    const switchElementIn = document.getElementById("In-mySwitch");
 
     switchElementEl.addEventListener("change", function() {
     const isChecked = this.checked;
     const value = isChecked ? true : false;
-
-    // Buat permintaan PUT ke API untuk mengubah data di database
-    fetch("https://rest-cdp-sunob45tza-et.a.run.app/api/data/d82K9kQOP13eUbNaPRxt", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ eliSwt : value }),
-    })
-      .then(response => {
-        if (response.ok) {
-          console.log(`Checkbox sekarang ${isChecked ? "dicentang" : "tidak dicentang"}. Diperbarui dalam database.`);
-        } else {
-          console.error("Gagal memperbarui database.");
-          // Jika gagal, kembalikan kondisi checkbox ke kondisi sebelumnya
-          
-        }
-      })
-      .catch(error => {
-        console.error("Terjadi kesalahan:", error);
-      });
+    
+    let data={eliSwt : value};
+    fetch_post(data);
+   
   });
   switchElementIn.addEventListener("change", function() {
     const isChecked = this.checked;
     const value = isChecked ? true : false;
+    let data={inSwt:value};
+    fetch_post(data);
+  });
 
-    // Buat permintaan PUT ke API untuk mengubah data di database
-    fetch("https://rest-cdp-sunob45tza-et.a.run.app/api/data/d82K9kQOP13eUbNaPRxt", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ inSwt : value }),
-    })
-      .then(response => {
-        if (response.ok) {
-          console.log(`Checkbox sekarang ${isChecked ? "dicentang" : "tidak dicentang"}. Diperbarui dalam database.`);
-        } else {
-          console.error("Gagal memperbarui database.");
-          // Jika gagal, kembalikan kondisi checkbox ke kondisi sebelumnya
-          
-        }
-      })
-      .catch(error => {
-        console.error("Terjadi kesalahan:", error);
-      });
+
+// Mulai stopwatch
+document.getElementById('startBtn').addEventListener('click', function() {
+  
+    if (!startTime) {
+      recordedTimes = [];
+      startTime = Date.now() - (recordedTimes.length > 0 ? recordedTimes.reduce((acc, val) => acc + val) * 1000 : 0);
+      console.log(`cek nilai ${startTime}`);
+      
+      recordedNumber = [];
+    } else if (pausedTime) {
+      startTime += Date.now() - pausedTime;
+      pausedTime = null;
+      
+    }
+    timerInterval = setInterval(updateTimer, 1000);
+    
+  });
+  
+  // Berhenti stopwatch
+  document.getElementById('stopBtn').addEventListener('click', function() {
+    clearInterval(timerInterval);
+    pausedTime = Date.now();
+
+  });
+  
+  // Reset stopwatch
+  document.getElementById('resetBtn').addEventListener('click', function() {
+    clearInterval(timerInterval);
+    startTime = null;
+    pausedTime = null;
+    
+    document.getElementById('timer').innerHTML = '00:00:00';
+    
+    console.log(recordedTimes);
+    console.log(recordedNumber);
+    
+    let data = { times: recordedTimes,
+    value: recordedNumber };
+
+    fetch_post(data);
+
+  });    
+    
+  document.getElementById('diagramClick').addEventListener('click',function(event){
+    event.preventDefault();
+ 
+                         let newData= {
+                          data: {
+                               labels: xchart , // New values for labels
+                                datasets: [{
+                                  data: ychart // New values for datasets
+                                }]
+                              },
+                              prefix: '', // Updated prefix if needed
+                              suffix: '%' // Updated suffix if needed
+
+                        };
+                        document.querySelector('.diagram').setAttribute('data-update',JSON.stringify(newData));
+                        
+                        console.log(xchart);
+                        console.log(ychart);
   });
 
   </script>
