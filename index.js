@@ -6,10 +6,8 @@ const path = require('path');
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Define a route to serve your HTML file
-app.get('/', (_req, res) => {
-  // No need to manually read and send the HTML file,
-  // Express will serve it automatically from the 'public' directory
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public' ,'gate.html'));
 });
 
 // Start the server

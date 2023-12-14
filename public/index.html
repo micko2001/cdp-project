@@ -71,10 +71,10 @@
               <h6 class="text-overflow m-0">Welcome!</h6>
             </div>
    
-            <div class="dropdown-divider"></div>
-            <a href="#!" class="dropdown-item">
+            <div class="dropdown-divider" ></div>
+            <a href="#!" class="dropdown-item logout" id ="logout-btn">
               <i class="ni ni-user-run"></i>
-              <span>Logout</span>
+              <span   >Logout</span>
             </a>
           </div>
         </li>
@@ -143,11 +143,11 @@
               <i class="ni ni-key-25 text-info"></i> Login
             </a>
           </li>
-          <li class="nav-item">
+          <!--<li class="nav-item">
             <a class="nav-link" href="./examples/register.html">
               <i class="ni ni-circle-08 text-pink"></i> Register
             </a>
-          </li>
+          </li>-->
         </ul>
        
       </div>
@@ -188,7 +188,7 @@
                 <h6 class="text-overflow m-0">Welcome!</h6>
               </div>
               <div class="dropdown-divider"></div>
-              <a href="#!" class="dropdown-item">
+              <a href="#!" id="logout-btn-1" class="dropdown-item logout">
                 <i class="ni ni-user-run"></i>
                 <span>Logout</span>
               </a>
@@ -328,7 +328,7 @@
           <br></br>
           <button id="startBtn" class="pd-10 mb-xl-0 button mb-3">Mulai</button>
           <button id="stopBtn"  class="pd-10 mb-xl-0 button bg-red mb-3">Berhenti</button>
-          <button id="resetBtn"  class="pd-10 mb-xl-0 button bg-blue mb-3">Reset</button>
+          <button id="resetBtn"  class="pd-10 mb-xl-0 button bg-blue mb-3">Kirim</button>
           <br></br>
 
           <div class="card bg-gradient-default shadow">
@@ -637,6 +637,25 @@
   <script src="./assets/js/argon-dashboard.min.js?v=1.1.2"></script>
   <script src="https://cdn.trackjs.com/agent/v3/latest/t.js"></script>
   <script>
+     // Cek apakah user sudah login saat membuka halaman dashboard
+ window.onload = () => {
+  const authToken = localStorage.getItem('authToken');
+  if (!authToken) {
+    window.location.replace('gate.html');
+  } else {
+    fetch('https://rest-cdp-sunob45tza-et.a.run.app/dashboard', {
+      headers: {
+        'Authorization': `Bearer ${authToken}`,
+      },
+    })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error('Not authorized');
+      }
+      return response.json();
+    })
+   
+  }}
     window.TrackJS &&
       TrackJS.install({
         token: "ee6fab19c5a04ac1a32a645abde4613a",
@@ -833,6 +852,42 @@ document.getElementById('startBtn').addEventListener('click', function() {
                         console.log(xchart);
                         console.log(ychart);
   });
+
+  
+          // Fungsi untuk logout
+          const logout = async () => {
+            try {
+              const response = await fetch('https://rest-cdp-sunob45tza-et.a.run.app/logout', {
+                method: 'POST',
+                headers: {
+                  'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
+                },
+              });
+          
+              if (response.ok) {
+                localStorage.removeItem('authToken');
+                window.location.replace('./examples/login.html');
+              } else {
+                console.error('Logout failed');
+              }
+            } catch (error) {
+              console.error('Logout error:', error);
+            }
+          };
+          
+        document.getElementById('logout-btn').addEventListener('click',async (e) => {
+            e.preventDefault();
+            console.log("logout!!");
+            logout();
+            
+          });
+
+        document.getElementById('logout-btn-1').addEventListener('click',async (e) => {
+            e.preventDefault();
+            console.log("logout!!");
+            logout();
+            
+          });
 
   </script>
 </body>
