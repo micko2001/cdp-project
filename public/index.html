@@ -353,13 +353,41 @@
             <div class="card-body">
               <!-- Chart -->
               <div class="chart">
-          <!--     Chart wrapper -->
+            <!--     Chart wrapper -->
                 <canvas id="chart-sales" class="chart-canvas"></canvas>
               </div>
             </div>
           </div>
 
-          
+          <br></br>
+
+          <div class="card bg-gradient-default shadow">
+            <div class="card-header bg-transparent">
+              <div class="row align-items-center">
+                <div class="col">
+                  <h6 class="text-uppercase text-light ls-1 mb-1">Overview</h6>
+                  <h2 class="text-white mb-0">Record Value</h2>
+                </div>
+                <div class="col">
+                  <ul class="nav nav-pills justify-content-end">
+                    <li class="nav-item mr-2 mr-md-0 Tdiagram" data-toggle="chart"  > <!--'{"data":{"labels":[2,5,6]}} -->
+                      <a href="#" class="nav-link py-2 px-3 active"  id="TClick">
+                        <span class="d-none d-md-block">Temperature</span>
+                        <span class="d-md-none">Eth</span>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <!-- Chart -->
+              <div class="chart">
+            <!--     Chart wrapper -->
+                <canvas id="myChart" class="chart-canvas"></canvas>
+              </div>
+            </div>
+          </div>
         </div>
        <!--  <div class="col-xl-4">
           <div class="card shadow">
@@ -665,9 +693,13 @@
       let startTime, timerInterval,pausedTime
       let recordedTimes = [];
       let recordedNumber =[];
+      let recordedBoilT=[];
+      let recordedEthT =[];
       let xchart = [];
       let ychart =[];
-// Fungsi untuk mengubah format waktu ke HH:MM:SS
+      let yBoilT=[];
+      let yEthT=[];
+      // Fungsi untuk mengubah format waktu ke HH:MM:SS
 function formatTime(timeInSeconds) {
   let hours = Math.floor(timeInSeconds / 3600);
   let minutes = Math.floor((timeInSeconds % 3600) / 60);
@@ -739,6 +771,8 @@ function formatTime(timeInSeconds) {
                         ethTempElement.textContent = ethTemp;
                         xchart = timer;
                         ychart = valueY;
+                        yBoilT = latestData['yBoilT'];
+                        yEthT = latestData['yEthT'];
                         
                         
                         
@@ -749,6 +783,8 @@ function formatTime(timeInSeconds) {
                           const currentTime = Math.floor((Date.now() - startTime) / 1000);
                           recordedTimes.push(formatTime(currentTime));
                           recordedNumber.push(ethcons);
+                          recordedBoilT.push(boilTemp);
+                          recordedEthT.push(ethTemp);
                           console.log(recordedTimes);
                           console.log(recordedNumber);
                         }else if(pausedTime>0){
@@ -826,8 +862,12 @@ document.getElementById('startBtn').addEventListener('click', function() {
     console.log(recordedTimes);
     console.log(recordedNumber);
     
-    let data = { times: recordedTimes,
-    value: recordedNumber };
+    let data = { 
+      times: recordedTimes,
+      value: recordedNumber,
+      yBoilT: recordedBoilT,
+      yEthT : recordedEthT
+   };
 
     fetch_post(data);
 
@@ -853,6 +893,49 @@ document.getElementById('startBtn').addEventListener('click', function() {
                         console.log(ychart);
   });
 
+
+const Xvalues=[1,2,3,4,5,6,7,8];
+
+
+
+
+
+document.getElementById("TClick").addEventListener('click',function(event){
+  event.preventDefault();
+
+  const myChart=new Chart("myChart", {
+  type: "line",
+  data: {
+    labels: Xvalues,
+    datasets: [{ 
+      data: yBoilT,
+      borderColor: "red",
+      fill: false,
+      label : 'Suhu Pemanas',
+      labelColor:'red'
+    },  { 
+      data: yEthT,
+      borderColor: "blue",
+      fill: false,
+      label : 'Suhu Ethanol',
+      labelColor:'blue'
+    }]
+  },
+  options: {
+    legend: {display: false}
+  }
+});
+
+  myChart.data.labels = xchart;
+  
+    
+    // Update the chart
+    myChart.update();
+  // Call the updateChart function to update the chart with data from the API
+  console.log(xchart);
+  console.log(ychart);
+
+});
   
           // Fungsi untuk logout
           const logout = async () => {
